@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+        <!-- springAop配置  基于Schema-based方式 -->
+        <!-- 配置前置通知 -->
+        <bean id="before" class="com.bjsxt.advice.Mybefore"></bean>
+        <!-- 配置后置通知 -->
+        <bean id="after" class="com.bjsxt.advice.Myafter"></bean>
+        <!-- 配置异常通知 -->
+        <bean id="throw" class="com.bjsxt.advice.Throw"></bean>
+        <!-- 配置环绕通知 -->
+        <bean id="round" class="com.bjsxt.advice.Myround"></bean>
+        <aop:config>
+        	<aop:pointcut expression="execution(* com.bjsxt.demo.Demo.*(String))" id="mypoint"/><!-- 配置切点 -->
+        	<aop:advisor advice-ref="round" pointcut-ref="mypoint"/>
+        	<aop:advisor advice-ref="before" pointcut-ref="mypoint"/>
+        	<aop:advisor advice-ref="after" pointcut-ref="mypoint"/>
+        	<aop:advisor advice-ref="throw" pointcut-ref="mypoint"/>
+        </aop:config>
+        <!-- 配置bean -->
+        <bean id="demo" class="com.bjsxt.demo.Demo"></bean>
+        
+        <!-- 基于aspectj的方式 -->
+        <!-- 配置通知 -->
+        <bean id="advice" class="com.bjsxt.advice2.Advice"></bean>
+        <!-- 配置aspectj方式的springaop -->
+        <aop:config>
+        	<aop:aspect ref="advice">
+        		<aop:pointcut expression="execution(* com.bjsxt.demo.Demo2.demo(String)) and args(name)" id="mypoint2"/><!-- 配置切点 -->
+        		 <aop:before method="before" pointcut-ref="mypoint2" arg-names="name"/>
+        		<aop:after method="after" pointcut-ref="mypoint2" arg-names="name"/>
+        		<!--<aop:after-returning method="afterReturning" pointcut-ref="mypoint2"/>
+        		<aop:after-throwing method="myThrow" pointcut-ref="mypoint2" throwing="e"/>
+        		<aop:around method="round" pointcut-ref="mypoint2"/> -->
+        	</aop:aspect>
+        </aop:config>
+        <!-- 配置bean -->
+        <bean id="demo2" class="com.bjsxt.demo.Demo2"></bean>
+</beans>
